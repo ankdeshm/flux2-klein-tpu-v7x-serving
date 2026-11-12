@@ -1,0 +1,10 @@
+{
+  "vllm_omni_version": "v0.32.0 (vllm-torchtpu-omni)",
+  "vllm_omni_flux2_klein_supported": true,
+  "vllm_omni_qwen_image_21_supported": true,
+  "vllm_omni_flux1_schnell_supported": true,
+  "sglang_torchtpu_diffusion_version": "v0.2.0",
+  "sglang_flux1_supported": true,
+  "sglang_flux2_klein_supported": false,
+  "sglang_flux2_klein_finding": "sglang-torchtpu-diffusion v0.2.0 registers FluxPipeline (16-ch VAE + CLIP/T5) and ZImagePipeline, but does not yet register Flux2KleinPipeline (32-ch AutoencoderKLFlux2 + Qwen3ForCausalLM 3-layer joint embeddings + SwiGLU single/double blocks). vLLM-Omni v0.32.0 natively supports Flux2KleinPipeline and QwenImage21Pipeline; direct TorchTPU + torch._scaled_mm natively executes calibrated F8_E4M3 (FLUX.2-klein-4b-fp8) and hybrid KV-FP8 (FLUX.2-klein-9b-kv-fp8)."
+}

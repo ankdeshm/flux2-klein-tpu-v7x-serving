@@ -1,0 +1,73 @@
+# Copyright 2026 Google LLC
+# SPDX-License-Identifier: Apache-2.0
+#
+# TPU v7x (Ironwood) FLUX.2 Klein (4B & 9B) Multi-Replica & 2-Host Slice Serving Job
+# Replace YOUR_GCP_PROJECT_ID and YOUR_NODEPOOL_NAME before applying.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: v7x-flux2-klein-serving-benchmark
+  namespace: default
+spec:
+  completions: 2
+  parallelism: 2
+  completionMode: Indexed
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app: v7x-flux2-klein-serving
+      annotations:
+        gke-gcsfuse/volumes: "true"
+    spec:
+      restartPolicy: Never
+      nodeSelector:
+        cloud.google.com/gke-nodepool: YOUR_NODEPOOL_NAME
+      tolerations:
+        - key: google.com/tpu
+          operator: Exists
+          effect: NoSchedule
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 700Gi
+        - name: models-cache
+          persistentVolumeClaim:
+            claimName: models-gcs-pvc
+      containers:
+        - name: worker
+          image: us-central1-docker.pkg.dev/YOUR_GCP_PROJECT_ID/vllm/vllm-torchtpu-omni:v0.32.0
+          securityContext:
+            privileged: true
+          env:
+            - name: PJRT_DEVICE
+              value: "TPU"
+            - name: JAX_COMPILATION_CACHE_DIR
+              value: "/dev/shm/xla_cache_flux2"
+            - name: TORCH_TPU_CACHE_DIR
+              value: "/dev/shm/xla_cache_flux2"
+          resources:
+            requests:
+              google.com/tpu: "4"
+              memory: "900Gi"
+            limits:
+              google.com/tpu: "4"
+              memory: "1200Gi"
+          volumeMounts:
+            - name: dshm
+              mountPath: /dev/shm
+            - name: models-cache
+              mountPath: /models
+          command: ["bash", "-lc"]
+          args:
+            - |
+              set -euo pipefail
+              python3 /workspace/scripts/prepare_flux2_klein_9b_diffusers.py --models-root=/models/models --shm-root=/dev/shm/flux2_models
+              if [ "${JOB_COMPLETION_INDEX}" = "0" ]; then
+                python3 /workspace/scripts/run_flux2_klein_vllm_omni_serving.py --suite=host0-main --output-dir=/models/flux2-klein-results
+                python3 /workspace/scripts/run_flux2_klein_torchtpu_fp8_kv_bench.py --models=klein_4b --tag=host0 --output-dir=/models/flux2-klein-results
+              else
+                python3 /workspace/scripts/run_flux2_klein_vllm_omni_serving.py --suite=host1-baselines --output-dir=/models/flux2-klein-results
+                python3 /workspace/scripts/run_flux2_klein_torchtpu_fp8_kv_bench.py --models=klein_9b --tag=host1 --output-dir=/models/flux2-klein-results
+              fi

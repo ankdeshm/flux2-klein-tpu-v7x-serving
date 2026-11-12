@@ -1,0 +1,65 @@
+# Copyright 2026 Google LLC
+# SPDX-License-Identifier: Apache-2.0
+#
+# Benchmark Matrix Configuration for FLUX.2 Klein (4B & 9B) Serving on Cloud TPU v7x (Ironwood)
+
+hardware:
+  accelerator: tpu-v7x
+  hosts: 2
+  chips_per_host: 4
+  tensorcores_per_chip: 2
+  total_chips: 8
+  total_tensorcores: 16
+  hbm3e_per_chip_gib: 192
+  hbm3e_total_tb: 1.536
+  topology: 2x2x2
+
+models:
+  flux2_klein_4b_bf16:
+    repo_id: black-forest-labs/FLUX.2-klein-4B
+    pipeline: Flux2KleinPipeline
+    precision: BF16
+    double_blocks: 5
+    single_blocks: 20
+    hidden_size: 3072
+    text_encoder: Qwen3-4B
+  flux2_klein_4b_fp8:
+    repo_id: black-forest-labs/FLUX.2-klein-4b-fp8
+    pipeline: TorchTPU-Calibrated-FP8
+    precision: F8_E4M3
+    calibrated_scales: [input_scale, weight_scale]
+  flux2_klein_9b_bf16:
+    repo_id: Comfy-Org/Flux-2-Klein-9B
+    pipeline: Flux2KleinPipeline
+    precision: BF16
+    double_blocks: 8
+    single_blocks: 24
+    hidden_size: 4096
+    text_encoder: Qwen3-8B
+  flux2_klein_9b_kv_fp8:
+    repo_id: black-forest-labs/FLUX.2-klein-9b-kv-fp8
+    pipeline: TorchTPU-Hybrid-KV-FP8
+    precision: KV-FP8
+    hybrid_kv_layers: double_blocks.*.img_attn.(qkv|proj) [BF16]
+    fp8_layers: img_mlp, txt_attn, txt_mlp, single_blocks [F8_E4M3]
+  baselines:
+    - black-forest-labs/FLUX.1-schnell
+    - Qwen/Qwen-Image-2-1-Turbo
+
+topologies:
+  single_host_8tc:
+    - DP=8 x U=1
+    - DP=4 x U=2  # Intra-Chip zero-hop sweet spot (1 physical v7x chip = 2 TensorCores)
+    - DP=2 x U=4
+    - DP=1 x U=8
+  two_host_slice_16tc:
+    - 2-Host DP=16 x U=1
+    - 2-Host DP=8 x U=2
+
+sweeps:
+  resolutions: [512x512, 1024x1024, 1536x1536, 2048x2048]
+  steps: [1, 4, 8, 20]
+  batch_sizes: [1, 2, 4]
+  closed_loop_concurrency: [1, 2, 4, 8, 16, 32, 64]
+  open_loop_poisson_rps: [1.0, 2.0, 4.0, 8.0]
+  capacity_targets_ipm: [60, 300, 600]

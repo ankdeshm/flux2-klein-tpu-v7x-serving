@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multimodal-cpu-offload-svc
+  namespace: default
+  labels:
+    app: multimodal-cpu-offload-svc
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: multimodal-cpu-offload-svc
+  template:
+    metadata:
+      labels:
+        app: multimodal-cpu-offload-svc
+    spec:
+      nodeSelector:
+        cloud.google.com/compute-class: c3
+      containers:
+      - name: offload-server
+        image: python:3.12-slim
+        command: ["python3", "-u", "/app/multimodal_cpu_offload_server.py", "--port=8090", "--workers=32"]
+        ports:
+        - containerPort: 8090
+          name: http
+        resources:
+          requests:
+            cpu: "32"
+            memory: "128Gi"
+          limits:
+            cpu: "42"
+            memory: "160Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: multimodal-cpu-offload-svc
+  namespace: default
+spec:
+  selector:
+    app: multimodal-cpu-offload-svc
+  ports:
+  - name: http
+    port: 8090
+    targetPort: 8090
+  type: ClusterIP

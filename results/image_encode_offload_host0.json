@@ -1,0 +1,163 @@
+{
+  "service_health": {
+    "status": "ok",
+    "cpu_model": "Intel(R) Xeon(R) Platinum 8481C CPU @ 2.70GHz",
+    "vcpus": 44
+  },
+  "single_stream": {
+    "512x512_png": {
+      "resolution": "512x512",
+      "format": "png",
+      "offload_ok": true,
+      "local_tpu_cpu_encode_ms": 31.15,
+      "disagg_cpu_rtt_ms": 35.82,
+      "disagg_cpu_server_encode_ms": 34.72,
+      "encoded_bytes": 787271,
+      "single_stream_speedup_x": 0.87
+    },
+    "512x512_webp": {
+      "resolution": "512x512",
+      "format": "webp",
+      "offload_ok": true,
+      "local_tpu_cpu_encode_ms": 34.56,
+      "disagg_cpu_rtt_ms": 35.01,
+      "disagg_cpu_server_encode_ms": 33.91,
+      "encoded_bytes": 233344,
+      "single_stream_speedup_x": 0.99
+    },
+    "1024x1024_png": {
+      "resolution": "1024x1024",
+      "format": "png",
+      "offload_ok": true,
+      "local_tpu_cpu_encode_ms": 112.63,
+      "disagg_cpu_rtt_ms": 142.12,
+      "disagg_cpu_server_encode_ms": 139.58,
+      "encoded_bytes": 3147871,
+      "single_stream_speedup_x": 0.79
+    },
+    "1024x1024_webp": {
+      "resolution": "1024x1024",
+      "format": "webp",
+      "offload_ok": true,
+      "local_tpu_cpu_encode_ms": 138.37,
+      "disagg_cpu_rtt_ms": 136.87,
+      "disagg_cpu_server_encode_ms": 135.0,
+      "encoded_bytes": 929524,
+      "single_stream_speedup_x": 1.01
+    },
+    "1536x1536_png": {
+      "resolution": "1536x1536",
+      "format": "png",
+      "offload_ok": true,
+      "local_tpu_cpu_encode_ms": 259.19,
+      "disagg_cpu_rtt_ms": 321.98,
+      "disagg_cpu_server_encode_ms": 315.96,
+      "encoded_bytes": 7081863,
+      "single_stream_speedup_x": 0.8
+    },
+    "1536x1536_webp": {
+      "resolution": "1536x1536",
+      "format": "webp",
+      "offload_ok": true,
+      "local_tpu_cpu_encode_ms": 307.49,
+      "disagg_cpu_rtt_ms": 307.37,
+      "disagg_cpu_server_encode_ms": 304.01,
+      "encoded_bytes": 2089958,
+      "single_stream_speedup_x": 1.0
+    },
+    "2048x2048_png": {
+      "resolution": "2048x2048",
+      "format": "png",
+      "offload_ok": true,
+      "local_tpu_cpu_encode_ms": 449.85,
+      "disagg_cpu_rtt_ms": 571.75,
+      "disagg_cpu_server_encode_ms": 562.94,
+      "encoded_bytes": 12589390,
+      "single_stream_speedup_x": 0.79
+    },
+    "2048x2048_webp": {
+      "resolution": "2048x2048",
+      "format": "webp",
+      "offload_ok": true,
+      "local_tpu_cpu_encode_ms": 554.72,
+      "disagg_cpu_rtt_ms": 545.78,
+      "disagg_cpu_server_encode_ms": 539.56,
+      "encoded_bytes": 3697862,
+      "single_stream_speedup_x": 1.02
+    }
+  },
+  "concurrent_dp8_wave": {
+    "512x512_png": {
+      "resolution": "512x512",
+      "format": "png",
+      "wave_images": 8,
+      "serial_on_host_ms": 224.76,
+      "disagg_8way_wall_ms": 49.43,
+      "wave_speedup_x": 4.55,
+      "tpu_blocking_ms_async_pipelined": 2.47
+    },
+    "512x512_webp": {
+      "resolution": "512x512",
+      "format": "webp",
+      "wave_images": 8,
+      "serial_on_host_ms": 275.18,
+      "disagg_8way_wall_ms": 44.11,
+      "wave_speedup_x": 6.24,
+      "tpu_blocking_ms_async_pipelined": 2.21
+    },
+    "1024x1024_png": {
+      "resolution": "1024x1024",
+      "format": "png",
+      "wave_images": 8,
+      "serial_on_host_ms": 928.52,
+      "disagg_8way_wall_ms": 170.74,
+      "wave_speedup_x": 5.44,
+      "tpu_blocking_ms_async_pipelined": 2.5
+    },
+    "1024x1024_webp": {
+      "resolution": "1024x1024",
+      "format": "webp",
+      "wave_images": 8,
+      "serial_on_host_ms": 1103.59,
+      "disagg_8way_wall_ms": 154.64,
+      "wave_speedup_x": 7.14,
+      "tpu_blocking_ms_async_pipelined": 2.5
+    },
+    "1536x1536_png": {
+      "resolution": "1536x1536",
+      "format": "png",
+      "wave_images": 8,
+      "serial_on_host_ms": 2066.99,
+      "disagg_8way_wall_ms": 385.13,
+      "wave_speedup_x": 5.37,
+      "tpu_blocking_ms_async_pipelined": 2.5
+    },
+    "1536x1536_webp": {
+      "resolution": "1536x1536",
+      "format": "webp",
+      "wave_images": 8,
+      "serial_on_host_ms": 2495.87,
+      "disagg_8way_wall_ms": 351.8,
+      "wave_speedup_x": 7.09,
+      "tpu_blocking_ms_async_pipelined": 2.5
+    },
+    "2048x2048_png": {
+      "resolution": "2048x2048",
+      "format": "png",
+      "wave_images": 8,
+      "serial_on_host_ms": 3637.74,
+      "disagg_8way_wall_ms": 662.2,
+      "wave_speedup_x": 5.49,
+      "tpu_blocking_ms_async_pipelined": 2.5
+    },
+    "2048x2048_webp": {
+      "resolution": "2048x2048",
+      "format": "webp",
+      "wave_images": 8,
+      "serial_on_host_ms": 4446.5,
+      "disagg_8way_wall_ms": 625.89,
+      "wave_speedup_x": 7.1,
+      "tpu_blocking_ms_async_pipelined": 2.5
+    }
+  }
+}
